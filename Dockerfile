@@ -1,18 +1,17 @@
 FROM --platform=${TARGETPLATFORM} golang:alpine as builder
-ARG CGO_ENABLED=0
 ARG TAG
 
 WORKDIR /root
 RUN set -ex && \
-	apk add --update git && \
+	apk add --update git build-base make && \
 	git clone https://github.com/fatedier/frp.git frp && \
 	cd ./frp && \
 	git fetch --all --tags && \
 	git checkout tags/${TAG} && \
-	go build -ldflags "-s -w -X main.version=${TAG}" -trimpath -o frps
+	make frps
 
 FROM --platform=${TARGETPLATFORM} alpine:latest
-COPY --from=builder /root/frp/frps /usr/bin/ 
+COPY --from=builder /root/frp/bin/frps /usr/bin/
 
 RUN apk add --no-cache ca-certificates su-exec
 
