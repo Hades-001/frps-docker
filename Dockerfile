@@ -3,7 +3,7 @@ ARG TAG
 
 WORKDIR /root
 RUN set -ex && \
-	apk add --update git build-base make && \
+	apk add --update git build-base && \
 	git clone https://github.com/fatedier/frp.git frp && \
 	cd ./frp && \
 	git fetch --all --tags && \
@@ -15,10 +15,7 @@ COPY --from=builder /root/frp/bin/frps /usr/bin/
 
 RUN apk add --no-cache ca-certificates su-exec
 
-RUN mkdir /conf
-COPY --from=builder /root/frp/conf/frps.ini /conf
-
-RUN mkdir /etc/frps
+RUN mkdir -p /etc/frps
 
 VOLUME ["/etc/frps"]
 
@@ -30,6 +27,4 @@ COPY docker-entrypoint.sh /bin/entrypoint.sh
 RUN chmod a+x /bin/entrypoint.sh
 ENTRYPOINT ["/bin/entrypoint.sh"]
 
-EXPOSE 7000
-
-CMD /usr/bin/frps -c /etc/frps/frps.ini
+CMD /usr/bin/frps
