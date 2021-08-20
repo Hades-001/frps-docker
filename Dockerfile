@@ -13,7 +13,11 @@ RUN set -ex && \
 FROM --platform=${TARGETPLATFORM} alpine:latest
 COPY --from=builder /root/frp/bin/frps /usr/bin/
 
-RUN apk add --no-cache ca-certificates su-exec
+RUN apk add --no-cache ca-certificates su-exec tzdata
+
+ENV TZ=Asia/Shanghai
+RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
+	echo "${TZ}" > /etc/timezone
 
 RUN mkdir -p /etc/frps
 
