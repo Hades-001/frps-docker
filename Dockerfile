@@ -15,15 +15,15 @@ COPY --from=builder /root/frp/bin/frps /usr/bin/
 
 RUN apk add --no-cache ca-certificates su-exec tzdata
 
-ENV TZ=Asia/Shanghai
-RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
-	echo "${TZ}" > /etc/timezone
-
 RUN mkdir -p /etc/frps
 
 VOLUME ["/etc/frps"]
 
 WORKDIR /etc/frps
+
+ENV TZ=Asia/Shanghai
+RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
+	echo "${TZ}" > /etc/timezone
 
 ENV PUID=1000 PGID=1000 HOME=/etc/frps
 
