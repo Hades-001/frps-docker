@@ -17,18 +17,12 @@ RUN apk add --no-cache ca-certificates su-exec tzdata
 
 RUN mkdir -p /etc/frps
 
-VOLUME ["/etc/frps"]
-
 WORKDIR /etc/frps
+
+COPY --from=builder /root/frp/conf/frps.ini /etc/frps/frps.ini
 
 ENV TZ=Asia/Shanghai
 RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
 	echo "${TZ}" > /etc/timezone
 
-ENV PUID=1000 PGID=1000 HOME=/etc/frps
-
-COPY docker-entrypoint.sh /bin/entrypoint.sh
-RUN chmod a+x /bin/entrypoint.sh
-ENTRYPOINT ["/bin/entrypoint.sh"]
-
-CMD /usr/bin/frps
+CMD /usr/bin/frps -c /etc/frps/frps.ini
