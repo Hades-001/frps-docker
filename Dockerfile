@@ -25,7 +25,7 @@ ENV TZ=Asia/Shanghai
 RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
 	echo "${TZ}" > /etc/timezone
 
-ENV PUID=1000 PGID=1000 HOME=/etc/frpc
+ENV PUID=1000 PGID=1000 HOME=/etc/frps
 
 COPY docker-entrypoint.sh /bin/entrypoint.sh
 RUN chmod a+x /bin/entrypoint.sh
